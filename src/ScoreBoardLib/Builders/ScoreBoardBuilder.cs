@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ScoreBoardLib.Abstractions;
+﻿using ScoreBoardLib.Abstractions;
 using ScoreBoardLib.Models;
 using ScoreBoardLib.Validation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace ScoreBoardLib
+namespace ScoreBoardLib.Builders
 {
     public class ScoreBoardBuilder : IScoreBoardBuilder
     {
-        internal List<Game> Games { get; set; } = new List<Game>();
+        internal List<Match> Matches { get; set; } = new List<Match>();
         internal Type RendererImplementation { get; set; }
 
-        public IScoreBoardBuilder AddGame(Team homeTeam, Team awayTeam, DateTime? timeStarted = null)
+        public IScoreBoardBuilder AddMatch(Team homeTeam, Team awayTeam)
         {
-            Games.Add(new Game { HomeTeam = homeTeam, AwayTeam = awayTeam, StartTime = timeStarted is null ? default : timeStarted.Value });
+            Matches.Add(new Match { HomeTeam = homeTeam, AwayTeam = awayTeam });
             return this;
         }
 
-        public ScoreBoard Build()
+        public IScoreBoard Build()
         {
             ScoreBoardValidationResult result = new ScoreBoardBuilderValidator().Validate(this);
 
@@ -30,10 +30,17 @@ namespace ScoreBoardLib
                 );
             }
 
-            return new ScoreBoard
+            IScoreBoardRenderer Renderer = Activator.CreateInstance(RendererImplementation) as IScoreBoardRenderer;
+
+            ScoreBoard scoreBoard = new ScoreBoard
             {
-                
+                Renderer = Renderer,
+                Matches = Matches
             };
+            
+            scoreBoard.ScoreBoardStateChanged += Renderer.OnScoreBoardChanged;
+
+            return scoreBoard;
         }
 
         public IScoreBoardBuilder UseRenderer<TRendererImpl>() where TRendererImpl : IScoreBoardRenderer

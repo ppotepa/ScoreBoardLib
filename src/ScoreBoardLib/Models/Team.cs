@@ -9,9 +9,16 @@ namespace ScoreBoardLib.Models
     {
         private readonly Country _countryEnum;
 
-        public Team(Country country)
+        public Team(Country country, int score)
         {
             Country = new RegionInfo(country.ToString());
+            Score = score;
+            _countryEnum = country;
+        }
+
+        public Team(Country country)
+        {
+            Country = new RegionInfo(country.ToString());            
             _countryEnum = country;
         }
 

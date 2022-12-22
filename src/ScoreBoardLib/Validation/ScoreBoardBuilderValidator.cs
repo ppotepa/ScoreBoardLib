@@ -1,4 +1,5 @@
-﻿using ScoreBoardLib.Models;
+﻿using ScoreBoardLib.Builders;
+using ScoreBoardLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,14 @@ namespace ScoreBoardLib.Validation
         internal ScoreBoardValidationResult Validate(ScoreBoardBuilder scoreBoardBuilder)
         {
             List<string> validationMessages = new List<string>();
-            IEnumerable<IGrouping<string, Team>> anyDuplicates = scoreBoardBuilder.Games.SelectMany(game => new[] { game.HomeTeam, game.AwayTeam })
+            IEnumerable<IGrouping<string, Team>> duplicates = scoreBoardBuilder.Matches
+                                                                .SelectMany(game => new[] { game.HomeTeam, game.AwayTeam })
                                                                 .GroupBy(game => game.Country.Name)
                                                                 .Where(game => game.Count() > 1);
 
-            if (anyDuplicates.Any())
+            if (duplicates.Any())
             {
-                validationMessages.Add($"Duplicate Teams found - [{string.Join(", ", anyDuplicates.Select(grouping => grouping.First().Country.Name))}]");
+                validationMessages.Add($"Duplicate Teams found - [{string.Join(", ", duplicates.Select(grouping => grouping.First().Country.Name))}] - Builder has stopped.");
             }
 
             return new ScoreBoardValidationResult
