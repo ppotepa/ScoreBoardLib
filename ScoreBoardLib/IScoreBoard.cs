@@ -1,6 +1,6 @@
 ﻿namespace ScoreBoardLib
 {
-    public class ScoreBoard
+    public interface IScoreBoard
     {
     }
 }

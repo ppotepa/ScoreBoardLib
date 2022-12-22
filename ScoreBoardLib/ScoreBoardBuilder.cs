@@ -3,36 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using ScoreBoardLib.Abstractions;
 using ScoreBoardLib.Models;
+using ScoreBoardLib.Validation;
 
 namespace ScoreBoardLib
 {
-    public class ScoreBoardBuilder
+    public class ScoreBoardBuilder : IScoreBoardBuilder
     {
-        private List<Game> _games { get; set; } = new List<Game>();
-        private Type _rendererImplementation { get; set; }
+        internal List<Game> Games { get; set; } = new List<Game>();
+        internal Type RendererImplementation { get; set; }
 
-        public ScoreBoardBuilder AddGame(Team homeTeam, Team awayTeam, DateTime? timeStarted = null)
+        public IScoreBoardBuilder AddGame(Team homeTeam, Team awayTeam, DateTime? timeStarted = null)
         {
-            if (homeTeam == awayTeam)
-                throw new InvalidOperationException("Home Team and Away Team cannot be the same country.");
-
-            List<Game> overlappingGames = _games.Where(x => x.AwayTeam == awayTeam || x.HomeTeam == homeTeam || x.AwayTeam == homeTeam || x.HomeTeam == awayTeam).ToList();
-
-            if (overlappingGames.Any())
-                throw new InvalidOperationException("Home Team and Away Team cannot be the same country.");
-
-            _games.Add(new Game { HomeTeam = homeTeam, AwayTeam = awayTeam, StartTime = timeStarted is null ? default : timeStarted.Value });
+            Games.Add(new Game { HomeTeam = homeTeam, AwayTeam = awayTeam, StartTime = timeStarted is null ? default : timeStarted.Value });
             return this;
         }
 
         public ScoreBoard Build()
         {
-            return new ScoreBoard();
+            ScoreBoardValidationResult result = new ScoreBoardBuilderValidator().Validate(this);
+
+            if (result.Messages.Any())
+            {
+                throw new InvalidOperationException
+                (
+                   message: $"Validation failed. Following Errors occured. \n\n{result.MessagesString}"
+                );
+            }
+
+            return new ScoreBoard
+            {
+                
+            };
         }
 
-        public ScoreBoardBuilder UseRenderer<TRendererImpl>() where TRendererImpl : IScoreBoardRenderer
+        public IScoreBoardBuilder UseRenderer<TRendererImpl>() where TRendererImpl : IScoreBoardRenderer
         {
-            _rendererImplementation = typeof(TRendererImpl);
+            RendererImplementation = typeof(TRendererImpl);
             return this;
         }
     }
