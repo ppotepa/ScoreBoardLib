@@ -38,8 +38,8 @@ namespace ScoreBoardLibDemo
             {
                 () => scoreBoard.AddAndStartNewMatch(new Team(Country.PL, 0), new Team(Country.CO, 0)),
                 () => scoreBoard.AddAndStartNewMatch(new Team(Country.PL, 0), new Team(Country.CO, 0)),
-                () => scoreBoard.IncreaseScore(new Team(Country.FM, 3), new Team(Country.FO, 3)),
-                () => scoreBoard.IncreaseScore(new Team(Country.PL, 2), new Team(Country.CO, 1)),
+                () => scoreBoard.ChangeScore(new Team(Country.FM, 3), new Team(Country.FO, 3)),
+                () => scoreBoard.ChangeScore(new Team(Country.PL, 2), new Team(Country.CO, 1)),
                 () => scoreBoard.FinishTheMatch(new Team(Country.PL), new Team(Country.CO)),
                 () => scoreBoard.AddAndStartNewMatch(new Team(Country.PL, 0), new Team(Country.CO, 0)),
                 () => scoreBoard.AddAndStartNewMatch(new Team(Country.AD, 0), new Team(Country.KZ, 0)),

@@ -14,7 +14,7 @@ namespace ScoreBoardLib
 
         IOrderedEnumerable<Match> GetMatchesByScoreDescending();
 
-        void IncreaseScore(Team homeTeam, Team awayTeam);
+        void ChangeScore(Team homeTeam, Team awayTeam);
         void Start();
     }
 }

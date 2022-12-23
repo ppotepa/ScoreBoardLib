@@ -89,7 +89,7 @@ namespace ScoreBoardLib
         public IOrderedEnumerable<Match> GetMatchesByScoreDescending()
             => Matches.OrderByDescending(match => match.AbsoluteScore).ThenBy(match => match.ElapsedMinutes);
 
-        public void IncreaseScore(Team homeTeam, Team awayTeam)
+        public void ChangeScore(Team homeTeam, Team awayTeam)
         {
             Match targetMatch = Matches.FirstOrDefault(match => match.HomeTeam == homeTeam && match.AwayTeam == awayTeam);
 

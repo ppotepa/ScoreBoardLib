@@ -42,7 +42,7 @@ namespace ScoreBoardLibTests
 
             if (builder.Build() is ScoreBoard board)
             {
-                board.IncreaseScore(new Team(Country.PL, 1), new Team(Country.CO, 0));
+                board.ChangeScore(new Team(Country.PL, 1), new Team(Country.CO, 0));
                 Assert.That(board[(Country.PL, Country.CO)].HomeTeam.Score, Is.EqualTo(1));
             }
         }
