@@ -1,6 +1,5 @@
 ﻿using ScoreBoardLib.Builders;
 using ScoreBoardLib.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

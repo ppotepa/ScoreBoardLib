@@ -7,19 +7,19 @@ namespace ScoreBoardLib.Models
 {
     public sealed class Team : IEquatable<Team>
     {
-        private readonly Country _countryEnum;
+        internal readonly Country CountryCodeEnumValue;
 
         public Team(Country country, int score)
         {
             Country = new RegionInfo(country.ToString());
             Score = score;
-            _countryEnum = country;
+            CountryCodeEnumValue = country;
         }
 
         public Team(Country country)
         {
             Country = new RegionInfo(country.ToString());            
-            _countryEnum = country;
+            CountryCodeEnumValue = country;
         }
 
         public RegionInfo Country { get; private set; }
@@ -47,7 +47,7 @@ namespace ScoreBoardLib.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(this._countryEnum, this.Country, this.Score);
+            return HashCode.Combine(this.CountryCodeEnumValue, this.Country, this.Score);
         }
     }
 }

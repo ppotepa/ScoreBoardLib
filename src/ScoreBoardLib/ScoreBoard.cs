@@ -1,4 +1,5 @@
 ﻿using ScoreBoardLib.Abstractions;
+using ScoreBoardLib.Enumerations;
 using ScoreBoardLib.EventArgs;
 using ScoreBoardLib.Models;
 using System;
@@ -10,10 +11,36 @@ namespace ScoreBoardLib
     public class ScoreBoard : IScoreBoard
     {
         public event EventHandler<ScoreBoardStateChangedEventArgs> ScoreBoardStateChanged;
+
         internal List<Match> Matches { get; set; }
+
         internal IScoreBoardRenderer Renderer { get; set; }
+
         private ScoreBoardStateChangedEventArgs DefaultArgs => new ScoreBoardStateChangedEventArgs { Matches = GetMatchesByScoreDescending().ToList() };
 
+        public Match this[(Country home, Country away) index]
+        {
+            get
+            {
+                return this.Matches.FirstOrDefault(match => match.HomeTeam.CountryCodeEnumValue == index.home && match.AwayTeam.CountryCodeEnumValue == index.away);
+            }
+
+            set
+            {
+                Match targetMatch = this.Matches.FirstOrDefault(match => match.HomeTeam.CountryCodeEnumValue == index.home && match.AwayTeam.CountryCodeEnumValue == index.away);
+
+                if (targetMatch is null)
+                {
+                    throw new InvalidOperationException("Match not found");
+                }
+                else
+                {
+                    targetMatch.HomeTeam.Score = value.HomeTeam.Score;
+                    targetMatch.AwayTeam.Score = value.AwayTeam.Score;
+                }
+            }
+
+        }
         public void AddAndStartNewMatch(Team homeTeam, Team awayTeam)
         {
             Match newMatch = new Match { HomeTeam = homeTeam, AwayTeam = awayTeam };
