@@ -14,7 +14,7 @@ namespace ScoreBoardLibTests
         [Test]
         public void Fetching_Scores_Returns_Them_In_Right_Order()
         {
-            ScoreBoardBuilder builder = new ScoreBoardBuilder();
+            ScoreBoardBuilder builder = new();
             builder.UseRenderer<VoidRenderer>()
                     .AddMatch(new Team(Country.EC, 5), new Team(Country.EE, 1), DateTime.Now.AddMinutes(-20))
                     .AddMatch(new Team(Country.PL, 5), new Team(Country.AD, 1), DateTime.Now.AddMinutes(-10))
@@ -30,46 +30,45 @@ namespace ScoreBoardLibTests
                 scores[2].HomeTeam.Country.Name == "NU" &&
                 scores[3].HomeTeam.Country.Name == "QA";
 
-            Assert.True(pass);
-
+            Assert.That(pass, Is.True);
         }
 
         [Test]
         public void Increase_Score_Test()
         {
-            ScoreBoardBuilder builder = new ScoreBoardBuilder();
+            ScoreBoardBuilder builder = new();
             builder.UseRenderer<VoidRenderer>()
                     .AddMatch(new Team(Country.PL, 0), new Team(Country.CO, 0), DateTime.Now.AddMinutes(-23));
 
-            ScoreBoard board = builder.Build() as ScoreBoard;
-            board.IncreaseScore(new Team(Country.PL, 1), new Team(Country.CO, 0));
-            Assert.True(board[(Country.PL, Country.CO)].HomeTeam.Score == 1);
+            if (builder.Build() is ScoreBoard board)
+            {
+                board.IncreaseScore(new Team(Country.PL, 1), new Team(Country.CO, 0));
+                Assert.That(board[(Country.PL, Country.CO)].HomeTeam.Score, Is.EqualTo(1));
+            }
         }
 
         [Test]
         public void Removing_A_Match_Test()
         {
-            ScoreBoardBuilder builder = new ScoreBoardBuilder();
+            ScoreBoardBuilder builder = new();
             builder.UseRenderer<VoidRenderer>()
                     .AddMatch(new Team(Country.PL, 0), new Team(Country.CO, 1), DateTime.Now.AddMinutes(-23));
 
             IScoreBoard board = builder.Build();
             board.FinishTheMatch(new Team(Country.PL, 0), new Team(Country.CO, 1));
-            Assert.True(!board.GetMatchesByScoreDescending().Any());
+            Assert.That(!board.GetMatchesByScoreDescending().Any(), Is.True);
         }
 
         [Test]
         public void ScoreBoard_Builder_Should_Not_Add_Duplicate_Teams()
         {
-            ScoreBoardBuilder builder = new ScoreBoardBuilder();
+            ScoreBoardBuilder builder = new();
             builder.AddMatch(new Team(Country.PL, 0), new Team(Country.CO, 1), DateTime.Now.AddMinutes(-23))
                    .AddMatch(new Team(Country.CO, 1), new Team(Country.PL, 2), DateTime.Now.AddMinutes(-13));
 
-            IScoreBoard board;            
-            
             try
             {
-                board = builder.Build();                
+                builder.Build();                
             }
             catch (InvalidOperationException)
             {
@@ -80,15 +79,13 @@ namespace ScoreBoardLibTests
         [Test]
         public void ScoreBoard_Builder_Should_Not_Add_Duplicate_Teams_In_Same_Match()
         {
-            ScoreBoardBuilder builder = new ScoreBoardBuilder();
+            ScoreBoardBuilder builder = new();
             builder.UseRenderer<VoidRenderer>()
                     .AddMatch(new Team(Country.PL, 0), new Team(Country.PL, 1), DateTime.Now.AddMinutes(-23));
 
-            IScoreBoard board;            
-
             try
             {
-                board = builder.Build();               
+                builder.Build();               
             }
             catch (InvalidOperationException)
             {
@@ -99,15 +96,13 @@ namespace ScoreBoardLibTests
         [Test]
         public void ScoreBoard_Builder_Should_Not_Add_Duplicate_Teams_In_Same_Match_When_Not_Using_A_Builder()
         {
-            ScoreBoardBuilder builder = new ScoreBoardBuilder();
+            ScoreBoardBuilder builder = new();
             builder.UseRenderer<VoidRenderer>()
                     .AddMatch(new Team(Country.PL, 0), new Team(Country.PL, 1), DateTime.Now.AddMinutes(-23));
 
-            IScoreBoard board;
-
             try
             {
-                board = builder.Build();
+                IScoreBoard board = builder.Build();
                 board.AddAndStartNewMatch(new Team(Country.PL, 0), new Team(Country.PL, 1));
             }
             catch (InvalidOperationException)

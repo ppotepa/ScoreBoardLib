@@ -1,5 +1,4 @@
-﻿using System;
-using ScoreBoardLib.EventArgs;
+﻿using ScoreBoardLib.EventArgs;
 
 namespace ScoreBoardLib.Abstractions
 {

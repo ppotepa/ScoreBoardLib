@@ -13,6 +13,7 @@ namespace ScoreBoardLib.Extensions.DependencyInjection
         public static void AddScoreBoard(this IServiceCollection @this, Action<ScoreBoardBuilder> buildingAction = default)
         {
             buildingAction ??= DefaultAction;
+
             ScoreBoardBuilder builder = new();
             buildingAction(builder);            
             IScoreBoard scoreBoard = builder.Build();

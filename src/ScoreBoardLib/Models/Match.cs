@@ -12,13 +12,13 @@ namespace ScoreBoardLib.Models
         public double ElapsedMinutes => (DateTime.Now - StartTime).Minutes;
         public Team HomeTeam { get; set; }
 
-        public GameProgess InProgress
+        public GameProgress InProgress
         {
             get
             {
-                if (StartTime == default) return GameProgess.NotStarted;
-                if ((DateTime.Now - StartTime).Minutes <= 90) return GameProgess.InProgress;
-                else return GameProgess.Ended;
+                if (StartTime == default) return GameProgress.NOT_STARTED;
+                if ((DateTime.Now - StartTime).Minutes <= 90) return GameProgress.IN_PROGRESS;
+                else return GameProgress.ENDED;
             }
         }
 

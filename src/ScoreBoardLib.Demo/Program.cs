@@ -34,7 +34,7 @@ namespace ScoreBoardLibDemo
 
             scoreBoard.Start();
 
-            List<Action> actions = new Action[]
+            List<Action> actions = new[]
             {
                 () => scoreBoard.AddAndStartNewMatch(new Team(Country.PL, 0), new Team(Country.CO, 0)),
                 () => scoreBoard.AddAndStartNewMatch(new Team(Country.PL, 0), new Team(Country.CO, 0)),

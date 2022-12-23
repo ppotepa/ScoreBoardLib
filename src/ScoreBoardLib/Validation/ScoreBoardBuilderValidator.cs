@@ -9,11 +9,13 @@ namespace ScoreBoardLib.Validation
     {
         internal ScoreBoardValidationResult Validate(ScoreBoardBuilder scoreBoardBuilder)
         {
-            List<string> validationMessages = new List<string>();
+            List<string> validationMessages = new();
+
             IEnumerable<IGrouping<string, Team>> duplicates = scoreBoardBuilder.Matches
-                                                                .SelectMany(game => new[] { game.HomeTeam, game.AwayTeam })
-                                                                .GroupBy(game => game.Country.Name)
-                                                                .Where(game => game.Count() > 1);
+                .SelectMany(game => new[] { game.HomeTeam, game.AwayTeam })
+                .GroupBy(game => game.Country.Name)
+                .Where(game => game.Count() > 1)
+                .ToArray();
 
             if (duplicates.Any())
             {

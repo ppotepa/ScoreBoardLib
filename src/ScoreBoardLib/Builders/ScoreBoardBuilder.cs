@@ -9,7 +9,7 @@ namespace ScoreBoardLib.Builders
 {
     public class ScoreBoardBuilder : IScoreBoardBuilder
     {
-        internal List<Match> Matches { get; set; } = new List<Match>();
+        internal List<Match> Matches { get; set; } = new();
         internal Type RendererImplementation { get; set; }
 
         public IScoreBoardBuilder AddMatch(Team homeTeam, Team awayTeam, DateTime startTime = default)
@@ -26,19 +26,20 @@ namespace ScoreBoardLib.Builders
             {
                 throw new InvalidOperationException
                 (
-                   message: $"Validation failed. Following Errors occured. \n\n{result.MessagesString}"
+                   message: $"Validation failed. Following Errors occurred. \n\n{result.MessagesString}"
                 );
             }
 
-            IScoreBoardRenderer Renderer = Activator.CreateInstance(RendererImplementation) as IScoreBoardRenderer;
+            IScoreBoardRenderer renderer = Activator.CreateInstance(RendererImplementation) as IScoreBoardRenderer;
 
-            ScoreBoard scoreBoard = new ScoreBoard
+            ScoreBoard scoreBoard = new()
             {
-                Renderer = Renderer,
+                Renderer = renderer,
                 Matches = Matches
             };
-            
-            scoreBoard.ScoreBoardStateChanged += Renderer.OnScoreBoardChanged;
+
+            if (renderer != null) 
+                scoreBoard.ScoreBoardStateChanged += renderer.OnScoreBoardChanged;
 
             return scoreBoard;
         }

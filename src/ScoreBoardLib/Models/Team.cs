@@ -22,8 +22,9 @@ namespace ScoreBoardLib.Models
             CountryCodeEnumValue = country;
         }
 
-        public RegionInfo Country { get; private set; }
+        public RegionInfo Country { get; }
         public int Score { get; internal set; }
+
         public static bool operator !=(Team left, Team right)
         {
             return !(left == right);

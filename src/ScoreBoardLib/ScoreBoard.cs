@@ -16,7 +16,7 @@ namespace ScoreBoardLib
 
         internal IScoreBoardRenderer Renderer { get; set; }
 
-        private ScoreBoardStateChangedEventArgs DefaultArgs => new ScoreBoardStateChangedEventArgs { Matches = GetMatchesByScoreDescending().ToList() };
+        private ScoreBoardStateChangedEventArgs DefaultArgs => new() { Matches = GetMatchesByScoreDescending().ToList() };
 
         public Match this[(Country home, Country away) index]
         {
@@ -43,7 +43,7 @@ namespace ScoreBoardLib
         }
         public void AddAndStartNewMatch(Team homeTeam, Team awayTeam)
         {
-            Match newMatch = new Match { HomeTeam = homeTeam, AwayTeam = awayTeam };
+            Match newMatch = new () { HomeTeam = homeTeam, AwayTeam = awayTeam };
 
             try
             {
@@ -67,6 +67,7 @@ namespace ScoreBoardLib
         public void FinishTheMatch(Team homeTeam, Team awayTeam)
         {
             Match targetMatch = Matches.FirstOrDefault(match => match.HomeTeam == homeTeam && match.AwayTeam == awayTeam);
+
             try
             {
                 if (targetMatch is null)
@@ -114,15 +115,17 @@ namespace ScoreBoardLib
         public void Start()
         {
             Renderer.Initialize();
-            Matches.ToList().ForEach(pair =>
-            {
-                if (pair.StartTime == default)
-                {
-                    pair.StartTime = DateTime.Now;
-                }
+            this.Matches.ForEach(Start);
+        }
 
-                ScoreBoardStateChanged?.Invoke(this, DefaultArgs);
-            });
+        private void Start(Match match)
+        {
+            if (match.StartTime == default)
+            {
+                match.StartTime = DateTime.Now;
+            }
+
+            ScoreBoardStateChanged?.Invoke(this, DefaultArgs);
         }
     }
 }
