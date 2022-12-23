@@ -134,6 +134,13 @@ IServiceCollection services = new ServiceCollection();
 
 *!! Please keep in mind ScoreBoard is a SingletonService !!*
 
+Also You can attach to any ScoreBoardEvents by goind like : 
+
+```
+      scoreBoard.ScoreBoardStateChanged += Renderer.OnScoreBoardChanged;
+```
+
+
 **Happy Using**
 
 
