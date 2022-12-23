@@ -12,9 +12,9 @@ namespace ScoreBoardLib.Builders
         internal List<Match> Matches { get; set; } = new List<Match>();
         internal Type RendererImplementation { get; set; }
 
-        public IScoreBoardBuilder AddMatch(Team homeTeam, Team awayTeam)
+        public IScoreBoardBuilder AddMatch(Team homeTeam, Team awayTeam, DateTime startTime = default)
         {
-            Matches.Add(new Match { HomeTeam = homeTeam, AwayTeam = awayTeam });
+            Matches.Add(new Match { HomeTeam = homeTeam, AwayTeam = awayTeam, StartTime = startTime });
             return this;
         }
 

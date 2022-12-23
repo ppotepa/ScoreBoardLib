@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace ScoreBoardLib.Models
 {
-    public class Team : IEquatable<Team>
+    public sealed class Team : IEquatable<Team>
     {
         private readonly Country _countryEnum;
 

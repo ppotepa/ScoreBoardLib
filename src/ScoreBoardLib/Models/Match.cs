@@ -9,6 +9,7 @@ namespace ScoreBoardLib.Models
         public int AbsoluteScore => AwayTeam.Score + HomeTeam.Score;
 
         public Team AwayTeam { get; set; }
+        public double ElapsedMinutes => (DateTime.Now - StartTime).Minutes;
         public Team HomeTeam { get; set; }
 
         public GameProgess InProgress
@@ -22,7 +23,6 @@ namespace ScoreBoardLib.Models
         }
 
         public DateTime StartTime { get; set; }
-
         public static bool operator !=(Match left, Match right)
         {
             return !(left == right);
@@ -53,6 +53,6 @@ namespace ScoreBoardLib.Models
         }
 
         public override string ToString() =>
-                            $"{HomeTeam.Country.Name} {HomeTeam.Score} : {AwayTeam.Score} {AwayTeam.Country.Name}";
+                            $"[HOME] {HomeTeam.Country.Name} {HomeTeam.Score} : {AwayTeam.Score} {AwayTeam.Country.Name} [AWAY] - {ElapsedMinutes} minutes";
     }
 }

@@ -3,7 +3,7 @@ using ScoreBoardLib.EventArgs;
 
 namespace ScoreBoardLib.Renderers
 {
-    internal class VoidRenderer : IScoreBoardRenderer
+    public class VoidRenderer : IScoreBoardRenderer
     {
         public void Initialize()
         {

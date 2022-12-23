@@ -12,9 +12,9 @@ namespace ScoreBoardLib
         public event EventHandler<ScoreBoardStateChangedEventArgs> ScoreBoardStateChanged;
         internal List<Match> Matches { get; set; }
         internal IScoreBoardRenderer Renderer { get; set; }
-        private ScoreBoardStateChangedEventArgs DefaultArgs => new ScoreBoardStateChangedEventArgs { Matches = MatchesByScoreDescending() };
+        private ScoreBoardStateChangedEventArgs DefaultArgs => new ScoreBoardStateChangedEventArgs { Matches = GetMatchesByScoreDescending().ToList() };
 
-        public void AddMatch(Team homeTeam, Team awayTeam)
+        public void AddAndStartNewMatch(Team homeTeam, Team awayTeam)
         {
             Match newMatch = new Match { HomeTeam = homeTeam, AwayTeam = awayTeam };
 
@@ -22,6 +22,7 @@ namespace ScoreBoardLib
             {
                 if (homeTeam != awayTeam && Matches.Any(match => match == newMatch) is false)
                 {
+                    newMatch.StartTime = DateTime.Now;
                     Matches.Add(newMatch);
                     ScoreBoardStateChanged?.Invoke(this, DefaultArgs);
                 }
@@ -35,6 +36,30 @@ namespace ScoreBoardLib
                 //intentionally left-empty
             }
         }
+
+        public void FinishTheMatch(Team homeTeam, Team awayTeam)
+        {
+            Match targetMatch = Matches.FirstOrDefault(match => match.HomeTeam == homeTeam && match.AwayTeam == awayTeam);
+            try
+            {
+                if (targetMatch is null)
+                {
+                    throw new InvalidOperationException("Match not found.");
+                }
+                else
+                {
+                    Matches.Remove(targetMatch);
+                    ScoreBoardStateChanged?.Invoke(this, DefaultArgs);
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                //intentionally left empty
+            }
+        }
+
+        public IOrderedEnumerable<Match> GetMatchesByScoreDescending()
+            => Matches.OrderByDescending(match => match.AbsoluteScore).ThenBy(match => match.ElapsedMinutes);
 
         public void IncreaseScore(Team homeTeam, Team awayTeam)
         {
@@ -59,37 +84,18 @@ namespace ScoreBoardLib
             }
         }
 
-        public void RemoveMatch(Team homeTeam, Team awayTeam)
-        {
-            Match targetMatch = Matches.FirstOrDefault(match => match.HomeTeam == homeTeam && match.AwayTeam == awayTeam);
-            try
-            {
-                if (targetMatch is null)
-                {
-                    throw new InvalidOperationException("Match not found.");
-                }
-                else
-                {
-                    Matches.Remove(targetMatch);
-                    ScoreBoardStateChanged?.Invoke(this, DefaultArgs);
-                }
-            }
-            catch (InvalidOperationException)
-            {
-                //intentionally left empty
-            }
-        }
-
         public void Start()
         {
             Renderer.Initialize();
             Matches.ToList().ForEach(pair =>
             {
-                pair.StartTime = DateTime.Now;
+                if (pair.StartTime == default)
+                {
+                    pair.StartTime = DateTime.Now;
+                }
+
                 ScoreBoardStateChanged?.Invoke(this, DefaultArgs);
             });
         }
-
-        internal List<Match> MatchesByScoreDescending() => Matches.OrderByDescending(match => match.AbsoluteScore).ToList();
     }
 }
