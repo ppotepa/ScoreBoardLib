@@ -163,5 +163,5 @@ THIS IS FOR RECRUITMENT PURPOSE ONLY
 
 * [Freddie Mercury](https://www.youtube.com/watch?v=g2N0TkfrQhY)
 * [@aragusea - Chicken Soup Dinner Maker](https://www.youtube.com/@aragusea)
-* []()
+* [ColorfulConsoleGuy](https://github.com/tomakita)
 
