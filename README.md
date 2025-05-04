@@ -3,7 +3,7 @@
   <h3 align="center">ScoreBoardLib</h3>
 
   <p align="center">
-    A Recruitment Process Written Library
+  Small Lib Written with sole purpose of recruitment process
     <br/>
     <br/>
   </p>
